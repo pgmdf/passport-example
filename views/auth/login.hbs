@@ -1,5 +1,9 @@
 <h2>Login</h2>
 
+{{#each errorArr}}
+<p style="color: red;">{{this}}</p>
+{{/each}}
+
 <form action="/login" method="POST" id="form-container">
   <label for="username">Username</label>
   <input id="username" type="text" name="username" placeholder="JonSnow">

@@ -32,6 +32,10 @@ const debug = require('debug')(`${app_name}:${path.basename(__filename).split('.
 
 const app = express();
 
+// enables flash messages
+const flash = require('connect-flash');
+app.use(flash());
+
 // express-session configuration 
 app.use(session({
   secret: "abc",

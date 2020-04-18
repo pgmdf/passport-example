@@ -21,6 +21,7 @@ router.post('/signup', (req, res, next) => {
 
   let user = new User({ username: req.body.username, password: hashPass })
   user.save().then(() => {
+    //req.login()
     res.send('worked')
     //res.redirect('/login')
   })
@@ -28,14 +29,15 @@ router.post('/signup', (req, res, next) => {
 })
 
 router.get('/login', (req, res) => {
-  res.render('auth/login')
+  //console.log(req.flash('error'))
+  res.render('auth/login', { errorArr: req.flash('message') })
 })
 
 // use LocalStrategy for authentication
 router.post('/login', passport.authenticate('local', {
   successRedirect: '/', // pick up the redirectBackTo parameter and after login redirect the user there. ( default / )
   failureRedirect: '/login',
-  // failureFlash: true,
+  failureFlash: true,
   // passReqToCallback: true
 }))
 

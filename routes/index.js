@@ -16,7 +16,10 @@ let loggedInUser = (req, res, next) => {
   if (req.user) {
     next()
   } else {
+    req.flash('message', 'You have to be logged in to view this page')
+    req.flash('message', 'this is Message 2')
     res.redirect('/login?redirectBackTo=' + req.path)
+    //res.send('test')
   }
 }
 
