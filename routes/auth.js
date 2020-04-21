@@ -10,26 +10,37 @@ const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const bcryptSalt = 10;
 
+const loggedInUser = require('../helpers/middlewares').loggedInUser
+const userIsAdmin = require('../helpers/middlewares').userIsAdmin
+
 router.get('/signup', (req, res, next) => {
   res.render('auth/signup');
 });
 
+
+// POST /signup
 router.post('/signup', (req, res, next) => {
 
   const salt = bcrypt.genSaltSync(bcryptSalt);
   const hashPass = bcrypt.hashSync(req.body.password, salt);
 
   let user = new User({ username: req.body.username, password: hashPass })
-  user.save().then(() => {
-    //req.login()
-    res.send('worked')
-    //res.redirect('/login')
+  user.save().then((theUser) => {
+    req.login(theUser, () => { res.redirect('/') }) // theUser now has an _id because we stored it into the database
   })
 
 })
 
 router.get('/login', (req, res) => {
   //console.log(req.flash('error'))
+
+  // req.flash('message') // <= this is always an array
+
+  // redirect to homepage if already logged in
+  if (req.user) {
+    res.redirect('/')
+  }
+
   res.render('auth/login', { errorArr: req.flash('message') })
 })
 
