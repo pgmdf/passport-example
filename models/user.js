@@ -9,6 +9,7 @@ const userSchema = new Schema(
     role: {
       type: String, enum: ['admin', 'co-host', 'student']
     },
+    slackID: String
   },
   {
     timestamps: {

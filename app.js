@@ -13,6 +13,7 @@ const session = require('express-session');
 const bcrypt = require('bcrypt');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const SlackStrategy = require('passport-slack').Strategy;
 
 const MongoStore = require("connect-mongo")(session);
 
@@ -82,6 +83,31 @@ passport.use(
       });
   })
 );
+
+passport.use(new SlackStrategy({
+  clientID: '2432150752.1083150970100',
+  clientSecret: 'acc0a2cf4d8ab06989fea97761144ed6'
+}, (accessToken, refreshToken, profile, done) => {
+
+  console.log("Slack account details:", profile);
+
+  // optionally persist profile data
+  User.findOne({ slackID: profile.id })
+    .then(user => {
+      if (user) {
+        done(null, user);
+        return;
+      }
+
+      User.create({ slackID: profile.id })
+        .then(newUser => {
+          done(null, newUser);
+        })
+        .catch(err => done(err)); // closes User.create()
+    })
+    .catch(err => done(err)); // closes User.findOne()
+}
+));
 
 
 
